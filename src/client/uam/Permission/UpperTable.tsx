@@ -435,7 +435,7 @@ const PermissionsTable: React.FC<prop> = ({ roleName }) => {
               type="checkbox"
               checked={selectedRows.size === data.length && data.length > 0}
               onChange={toggleAllSelection}
-              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+              className="accent-primary w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2"
             />
           </div>
         ),
@@ -445,7 +445,7 @@ const PermissionsTable: React.FC<prop> = ({ roleName }) => {
               type="checkbox"
               checked={selectedRows.has(row.original.PageID)}
               onChange={() => toggleRowSelection(row.original.PageID, row.id)}
-              className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+              className="accent-primary w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2"
             />
           </div>
         ),
@@ -454,21 +454,21 @@ const PermissionsTable: React.FC<prop> = ({ roleName }) => {
         accessorKey: "srNo",
         header: "Sr No",
         cell: ({ row }) => (
-          <span className="text-gray-700">{row.index + 1}</span>
+          <span className="text-secondary-text">{row.index + 1}</span>
         ),
       },
       {
         accessorKey: "PageID",
         header: "Page ID",
         cell: ({ row }) => (
-          <span className="text-gray-700">{row.original.PageID}</span>
+          <span className="text-secondary-text">{row.original.PageID}</span>
         ),
       },
       {
         accessorKey: "PageName",
         header: "Page Name",
         cell: ({ row }) => (
-          <span className="text-gray-700 capitalize">
+          <span className="text-secondary-text-dark font-semibold capitalize">
             {row.original.PageName.replace("-", " ")}
           </span>
         ),
@@ -504,7 +504,7 @@ const PermissionsTable: React.FC<prop> = ({ roleName }) => {
     const pageHasAccess = getPageAccess(row.original.PageName);
 
     return (
-      <tr className="bg-gray-50">
+      <tr className="bg-primary-md">
         <td
           colSpan={table.getVisibleLeafColumns().length}
           className="px-6 py-4"
@@ -513,18 +513,18 @@ const PermissionsTable: React.FC<prop> = ({ roleName }) => {
             {tabs.map((tab) => (
               <div
                 key={tab}
-                className={`bg-white rounded-lg p-4 shadow-sm border ${
+                className={`bg-secondary-color-lt rounded-lg p-4 shadow-sm border border-border ${
                   !pageHasAccess ? "opacity-50" : ""
                 }`}
               >
                 <div className="flex items-center justify-between mb-3">
-                  <h4 className="font-medium text-gray-900 capitalize">
+                  <h4 className="font-medium text-secondary-text capitalize">
                     {tab === "default"
                       ? "Default Permissions"
                       : tab.replace("Tab", " Tab")}
                   </h4>
                   <div className="flex items-center space-x-2">
-                    <span className="text-sm text-gray-600">Tab Access:</span>
+                    <span className="text-sm text-secondary-text">Tab Access:</span>
                     <input
                       type="checkbox"
                       checked={
@@ -539,7 +539,7 @@ const PermissionsTable: React.FC<prop> = ({ roleName }) => {
                         )
                       }
                       disabled={!pageHasAccess}
-                      className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
+                      className="accent-primary w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2"
                     />
                   </div>
                 </div>
@@ -590,9 +590,9 @@ const PermissionsTable: React.FC<prop> = ({ roleName }) => {
                           !pageHasAccess ||
                           !getPermissions(row.original.PageName, tab).hasAccess
                         }
-                        className="h-4 w-4 text-blue-600 focus:ring-blue-500 border-gray-300 rounded"
-                      />
-                      <span className="text-sm text-gray-700">
+                        className="accent-primary w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2"
+                        />
+                      <span className="text-sm text-secondary-text">
                         {permission.label}
                       </span>
                     </label>
@@ -714,7 +714,7 @@ const PermissionsTable: React.FC<prop> = ({ roleName }) => {
     <div className="mx-auto">
       <div className="flex justify-between items-center mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">
+          <h1 className="text-2xl font-bold text-secondary-text">
             Role Permissions Management
           </h1>
         </div>
@@ -726,15 +726,15 @@ const PermissionsTable: React.FC<prop> = ({ roleName }) => {
       </div>
 
       <div className="w-full overflow-x-auto">
-        <div className="bg-white rounded-xl shadow-lg border border-gray-200">
-          <table className="min-w-full divide-y divide-gray-200">
-            <thead className="bg-gray-50 rounded-xl">
+        <div className=" shadow-lg border border-border">
+          <table className="min-w-full">
+            <thead className="bg-body rounded-xl">
               {table.getHeaderGroups().map((headerGroup) => (
                 <tr key={headerGroup.id}>
                   {headerGroup.headers.map((header) => (
                     <th
                       key={header.id}
-                      className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider border-b border-gray-200"
+                      className="px-6 py-4 text-left text-xs font-semibold text-primary uppercase tracking-wider border-b border-border"
                     >
                       {flexRender(
                         header.column.columnDef.header,
@@ -745,12 +745,14 @@ const PermissionsTable: React.FC<prop> = ({ roleName }) => {
                 </tr>
               ))}
             </thead>
-            <tbody className="bg-white divide-y divide-gray-100">
+            <tbody className="divide-y divide-border">
               {table.getRowModel().rows.map((row) => (
                 <React.Fragment key={row.id}>
                   <tr
                     className={
-                      row.index % 2 === 0 ? "bg-[#d2f5f0]/50" : "bg-white"
+                      row.index % 2 === 0 
+                          ? "bg-primary-md"
+                          : "bg-secondary-color-lt"
                     }
                   >
                     {row.getVisibleCells().map((cell) => (

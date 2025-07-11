@@ -82,9 +82,9 @@ const ExposureUpload = () => {
           className={`
             flex items-center space-x-2 px-6 py-3 text-sm font-medium rounded-t-lg border-b-2 transition-all duration-200
             ${isActiveTab(tab.id)
-              ? 'bg-green-700 text-white border-green-700 shadow-sm'
-              : 'bg-white text-gray-600 border-gray-200 hover:bg-gray-50 hover:text-gray-800'
-            }
+              ? "bg-primary-lt text-white border-primary shadow-sm"
+            : "bg-body-hover text-secondary-text border-body-hover hover:bg-body-active hover:text-primary"
+        }
           `}
         >
           <span>{tab.label}</span>

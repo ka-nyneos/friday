@@ -107,8 +107,8 @@ const UserCreationForm: React.FC = () => {
       onButtonClick={PageChange}
     >
       <div className="flex justify-center">
-        <div className="p-6 rounded-xl border border-gray-300 bg-white shadow-md space-y-6 flex-shrink-0 w-full max-w-[1500px]">
-          <h2 className="text-xl font-semibold">Create User Form</h2>
+        <div className="p-6 rounded-xl border border-border bg-secondary-color-lt  shadow-md space-y-6 flex-shrink-0 w-full max-w-[1500px]">
+          <h2 className="text-xl font-semibold text-secondary-text">Create User Form</h2>
 
           <form
             onSubmit={handleSubmit(onSubmit)}
@@ -121,47 +121,47 @@ const UserCreationForm: React.FC = () => {
             />
 
             <div>
-              <label>Authentication Type<span className="text-red-500">*</span></label>
+              <label className="text-secondary-text">Authentication Type<span className="text-red-500">*</span></label>
               <input
                 type="text"
                 defaultValue="LDAP"
                 {...register("authenticationType", {
                   required: "Please enter your autentication type.",
                 })}
-                className="w-full p-2 border rounded"
+                className="w-full p-2 border rounded text-secondary-text bg-secondary-color-lt border-border"
               />
             </div>
 
             <div>
-              <label>Employee Name<span className="text-red-500">*</span></label>
+              <label className="text-secondary-text">Employee Name<span className="text-red-500">*</span></label>
               <input
                 type="text"
                 {...register("employeeName", {
                   required: "Please enter your employee name.",
                 })}
                 placeholder="Please enter your first employee name."
-                className="w-full p-2 border rounded"
+                className="w-full p-2 border rounded text-secondary-text bg-secondary-color-lt border-border"
               />
             </div>
 
             <div>
-              <label>Username / Employee ID<span className="text-red-500">*</span></label>
+              <label className="text-secondary-text">Username / Employee ID<span className="text-red-500">*</span></label>
               <input
                 type="text"
                 {...register("usernameOrEmployeeId", {
                   required: "Please enter your username or employee ID.",
                 })}
-                className="w-full p-2 border rounded"
+                className="w-full p-2 border rounded text-secondary-text bg-secondary-color-lt border-border"
               />
             </div>
 
             <div>
-              <label>Role Name</label>
+              <label className="text-secondary-text">Role Name</label>
               <select
                 {...register("roleName", {
                   required: "Please enter your role name.",
                 })}
-                className="w-full p-2 border rounded"
+                className="w-full p-2 border rounded text-secondary-text bg-secondary-color-lt border-border"
               >
                 <option value="" disabled hidden selected>
                   Select Role
@@ -175,40 +175,40 @@ const UserCreationForm: React.FC = () => {
             </div>
 
             <div>
-              <label>Email</label>
+              <label className="text-secondary-text">Email</label>
               <input
                 type="email"
                 {...register("email", {
                   required: "Please enter your email.",
                 })}
-                className="w-full p-2 border rounded"
+                className="w-full p-2 border rounded text-secondary-text bg-secondary-color-lt border-border"
               />
             </div>
 
             <div>
-              <label>Mobile</label>
+              <label className="text-secondary-text">Mobile</label>
               <input
                 type="tel"
                 {...register("mobile", { value: "" })}
-                className="w-full p-2 border rounded"
+                className="w-full p-2 border rounded text-secondary-text bg-secondary-color-lt border-border"
               />
             </div>
 
             <div>
-              <label>Address</label>
+              <label className="text-secondary-text">Address</label>
               <input
                 type="text"
                 {...register("address", { value: "" })}
-                className="w-full p-2 border rounded"
+                className="w-full p-2 border rounded text-secondary-text bg-secondary-color-lt border-border"
               />
             </div>
 
             <div>
-              <label>Business Unit Name</label>
+              <label className="text-secondary-text">Business Unit Name</label>
               <input
                 type="text"
                 {...register("businessUnitName")}
-                className="w-full p-2 border rounded"
+                className="w-full p-2 border rounded text-secondary-text bg-secondary-color-lt border-border"
               />
             </div>
 

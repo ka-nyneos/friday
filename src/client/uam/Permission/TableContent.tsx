@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, useMemo} from "react";
 import Button from "../../ui/Button";
-import { Upload } from "lucide-react";
+import { Download, Upload } from "lucide-react";
 import { exportToExcel } from "../../ui/exportToExcel";
 import { Draggable } from "../../common/Draggable";
 import { Droppable } from "../../common/Droppable";
@@ -52,21 +52,21 @@ const TableContent: React.FC<{
         accessorKey: "srNo",
         header: "Sr No",
         cell: ({ row }) => (
-          <span className="text-gray-700">{row.index + 1}</span>
+          <span className="text-secondary-text">{row.index + 1}</span>
         ),
       },
       {
         accessorKey: "RoleName",
         header: "Role Name",
         cell: (info) => (
-          <span className="text-gray-700">{info.getValue() as string}</span>
+          <span className="text-secondary-text">{info.getValue() as string}</span>
         ),
       },
       {
         accessorKey: "UpdatedBy",
         header: "Updated By",
         cell: (info) => (
-          <span className="text-gray-700">{info.getValue() as string}</span>
+          <span className="text-secondary-text">{info.getValue() as string}</span>
         ),
       },
       {
@@ -76,7 +76,7 @@ const TableContent: React.FC<{
           const dateStr = info.getValue() as string;
           const date = new Date(dateStr);
           return (
-            <span className="text-gray-700">
+            <span className="text-secondary-text">
               {isNaN(date.getTime()) ? dateStr : date.toLocaleDateString()}
             </span>
           );
@@ -92,6 +92,16 @@ const TableContent: React.FC<{
             Pending: "bg-yellow-100 text-yellow-800",
             Inactive: "bg-gray-200 text-gray-700",
           };
+          const toPascalCase = (str: string) => {
+            return str.replace(
+              /(\w)(\w*)/g,
+              (_, firstChar, rest) =>
+                firstChar.toUpperCase() + rest.toLowerCase()
+            );
+          };
+
+          const displayStatus = toPascalCase(status);
+
           return (
             <span
               className={`px-2 py-1 text-xs font-medium rounded-full ${
@@ -99,7 +109,7 @@ const TableContent: React.FC<{
                 "bg-gray-100 text-gray-800"
               }`}
             >
-              {status}
+              {displayStatus}
             </span>
           );
         },
@@ -115,7 +125,7 @@ const TableContent: React.FC<{
               type="checkbox"
               checked={table.getIsAllPageRowsSelected()}
               onChange={table.getToggleAllPageRowsSelectedHandler()}
-              className="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2"
+              className="accent-primary w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2"
             />
           </div>
         ),
@@ -125,7 +135,7 @@ const TableContent: React.FC<{
               type="checkbox"
               checked={row.getIsSelected()}
               onChange={row.getToggleSelectedHandler()}
-              className="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2"
+              className="accent-primary w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2"
             />
           </div>
         ),
@@ -188,15 +198,15 @@ const TableContent: React.FC<{
         <div className="mt-10 flex items-center justify-end gap-4">
           <button
             type="button"
-            className="flex items-center justify-center border border-[#129990] rounded-lg px-2 h-10 text-sm hover:bg-[#e6f7f5] transition"
-            title="Download All Roles"
+            className="flex items-center justify-center border border-border rounded-lg px-2 h-10 text-sm transition"
+              title="Download All Roles"
             onClick={() => exportToExcel(filteredData, "All_Roles")}
           >
-            <Upload className="text-[#129990]" />
+            <Download className="flex item-center justify-center text-primary" />
           </button>
           <button
             type="button"
-            className="flex items-center justify-center border border-[#129990] rounded-lg w-10 h-10 hover:bg-[#e6f7f5] transition"
+            className="flex items-center text-primary justify-center border border-border rounded-lg w-10 h-10 hover:bg-[#e6f7f5] transition"
             title="Refresh"
             onClick={() => window.location.reload()}
           >
@@ -204,11 +214,12 @@ const TableContent: React.FC<{
               width="20"
               height="20"
               fill="none"
-              stroke="#129990"
+              stroke="currentColor"
               strokeWidth="2"
               strokeLinecap="round"
               strokeLinejoin="round"
               viewBox="0 0 24 24"
+              className="accent-primary"
             >
               <path d="M23 4v6h-6" />
               <path d="M1 20v-6h6" />
@@ -222,26 +233,27 @@ const TableContent: React.FC<{
             <input
               type="text"
               placeholder="Search"
-              className="pl-4 pr-10 py-2 border border-[#129990] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#129990]/30 min-w-full"
+              className="pl-4 pr-10 text-secondary-text bg-secondary-color-lt py-2 border border-border rounded-lg focus:outline-none min-w-full"
               value={searchTerm}
               onChange={(e) => onSearchChange(e.target.value)}
             />
             <button
               type="submit"
-              className="absolute right-2 top-1/2 -translate-y-1/2 text-[#129990]"
+              className="absolute right-2 top-1/2 -translate-y-1/2 text-primary"
               tabIndex={-1}
               aria-label="Search"
             >
               <svg
-                width="18"
-                height="18"
-                fill="none"
-                stroke="#129990"
-                strokeWidth="2"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                viewBox="0 0 24 24"
-              >
+                  width="18"
+                  height="18"
+                  fill="none"
+                  stroke="currentColor"
+                  strokeWidth="2"
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  viewBox="0 0 24 24"
+                  className="w-4 h-4 accent-primary"
+                >
                 <circle cx="11" cy="11" r="8" />
                 <line x1="21" y1="21" x2="16.65" y2="16.65" />
               </svg>
@@ -260,15 +272,15 @@ const TableContent: React.FC<{
 
       {/* Table with DndContext properly positioned */}
       <div className="w-full overflow-x-auto">
-        <div className="bg-white rounded-xl shadow-lg border border-gray-200">
+        <div className=" shadow-lg border border-border">
           <DndContext onDragEnd={handleDragEnd}>
-            <table className="min-w-full divide-y divide-gray-200">
+            <table className="min-w-full">
               <colgroup>
                 {table.getVisibleLeafColumns().map((col) => (
                   <col key={col.id} className="font-medium min-w-[150px]" />
                 ))}
               </colgroup>
-              <thead className="bg-gray-50 rounded-xl">
+              <thead className="bg-secondary-color rounded-xl">
                 {table.getHeaderGroups().map((headerGroup) => (
                   <tr key={headerGroup.id}>
                     {headerGroup.headers.map((header, index) => {
@@ -277,9 +289,9 @@ const TableContent: React.FC<{
                       return (
                         <th
                           key={header.id}
-                          className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider border-b border-gray-200"
-                          style={{ width: header.getSize() }}
-                        >
+                          className="px-6 py-4 text-left text-xs font-semibold text-header-color uppercase tracking-wider border-b border-border"
+                            style={{ width: header.getSize() }}
+                          >
                           <Droppable id={header.column.id}>
                             {isFirst || isLast ? (
                               <div className="px-1">
@@ -290,8 +302,8 @@ const TableContent: React.FC<{
                               </div>
                             ) : (
                               <Draggable id={header.column.id}>
-                                <div className="cursor-move hover:bg-blue-100 rounded px-1 py-1 transition duration-150 ease-in-out">
-                                  {flexRender(
+                                <div className="cursor-move rounded py-1 transition duration-150 ease-in-out">
+                                                                    {flexRender(
                                     header.column.columnDef.header,
                                     header.getContext()
                                   )}
@@ -305,7 +317,7 @@ const TableContent: React.FC<{
                   </tr>
                 ))}
               </thead>
-              <tbody className="bg-white divide-y divide-gray-100">
+              <tbody className="divide-y ">
                 {table.getRowModel().rows.length === 0 ? (
                   <tr>
                     <td
@@ -316,7 +328,7 @@ const TableContent: React.FC<{
                         <p className="text-lg font-medium text-gray-900 mb-1">
                           No users found
                         </p>
-                        <p className="text-sm text-gray-500">
+                        <p className="text-sm text-primary">
                           There are no users to display at the moment.
                         </p>
                       </div>
@@ -327,13 +339,14 @@ const TableContent: React.FC<{
                     <tr
                       key={row.id}
                       className={
-                        row.index % 2 === 0 ? "bg-[#d2f5f0]/50" : "bg-white"
+                        row.index % 2 === 0 ?  "bg-primary-md"
+                          : "bg-secondary-color-lt"
                       }
                     >
                       {row.getVisibleCells().map((cell) => (
                         <td
                           key={cell.id}
-                          className="px-6 py-4 whitespace-nowrap text-sm border-b border-gray-100"
+                          className="px-6 py-4 whitespace-nowrap text-sm border-b border-border"
                         >
                           {flexRender(
                             cell.column.columnDef.cell,

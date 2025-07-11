@@ -684,7 +684,7 @@ const AllRoles: React.FC = () => {
                                 </div>
                               ) : (
                                 <Draggable id={header.column.id}>
-                                  <div className="cursor-move rounded px-1 py-1 transition duration-150 ease-in-out">
+                                  <div className="cursor-move rounded py-1 transition duration-150 ease-in-out">
                                     {flexRender(
                                       header.column.columnDef.header,
                                       header.getContext()

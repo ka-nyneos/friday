@@ -27,11 +27,11 @@ const AssignPermission: React.FC = () => {
       <div className="flex items-center justify-between">
         <div className="flex items-end justify-between w-full">
           <div className="w-full md:w-1/4">
-            <label className="block text-sm font-medium text-gray-700 mb-1">
+            <label className="block text-sm font-medium text-secondary-text mb-1">
               Select Role
             </label>
             <select
-              className="w-full px-3 py-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500"
+              className="w-full px-3 py-2 bg-secondary-color-lt text-secondary-text border border-border rounded-md focus:outline-none "
               value={selectedRole}
               onChange={(e) => setSelectedRole(e.target.value)}
             >

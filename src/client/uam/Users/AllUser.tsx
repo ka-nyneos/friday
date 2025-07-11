@@ -289,7 +289,9 @@ const AllUser: React.FC = () => {
         accessorKey: "authenticationType",
         header: "Auth Type",
         cell: (info) => (
-          <span className="text-secondary-text">{info.getValue() as string}</span>
+          <span className="text-secondary-text">
+            {info.getValue() as string}
+          </span>
         ),
       },
       {
@@ -305,42 +307,54 @@ const AllUser: React.FC = () => {
         accessorKey: "username",
         header: "Username",
         cell: (info) => (
-          <span className="text-secondary-text">{info.getValue() as string}</span>
+          <span className="text-secondary-text">
+            {info.getValue() as string}
+          </span>
         ),
       },
       {
         accessorKey: "email",
         header: "Email",
         cell: (info) => (
-          <span className="text-secondary-text">{info.getValue() as string}</span>
+          <span className="text-secondary-text">
+            {info.getValue() as string}
+          </span>
         ),
       },
       {
         accessorKey: "mobile",
         header: "Mobile",
         cell: (info) => (
-          <span className="text-secondary-text">{info.getValue() as string}</span>
+          <span className="text-secondary-text">
+            {info.getValue() as string}
+          </span>
         ),
       },
       {
         accessorKey: "address",
         header: "Address",
         cell: (info) => (
-          <span className="text-secondary-text">{info.getValue() as string}</span>
+          <span className="text-secondary-text">
+            {info.getValue() as string}
+          </span>
         ),
       },
       {
         accessorKey: "businessUnitName",
         header: "Business Unit",
         cell: (info) => (
-          <span className="text-secondary-text">{info.getValue() as string}</span>
+          <span className="text-secondary-text">
+            {info.getValue() as string}
+          </span>
         ),
       },
       {
         accessorKey: "createdBy",
         header: "Created By",
         cell: (info) => (
-          <span className="text-secondary-text">{info.getValue() as string}</span>
+          <span className="text-secondary-text">
+            {info.getValue() as string}
+          </span>
         ),
       },
       {
@@ -430,7 +444,7 @@ const AllUser: React.FC = () => {
           return (
             <div className="flex items-center space-x-1">
               <button
-                className="p-1.5 hover:bg-gray-100 rounded transition-colors"
+                className="p-1.5 hover:bg-primary-xl rounded transition-colors"
                 onClick={() =>
                   exportToExcel(
                     [row.original], // wrap in array for xlsx
@@ -443,7 +457,7 @@ const AllUser: React.FC = () => {
 
               {Visibility.delete && (
                 <button
-                  className="p-1.5 hover:bg-gray-100 rounded transition-colors"
+                  className="p-1.5 hover:bg-primary-xl rounded transition-colors"
                   onClick={() => handleDelete(user.id)}
                 >
                   <Trash2 className="w-4 h-4 text-red-600" />
@@ -459,7 +473,7 @@ const AllUser: React.FC = () => {
           <div className="flex items-center justify-center">
             <button
               type="button"
-              className="flex items-center justify-center mx-auto text-[#129990]"
+              className="flex items-center justify-center mx-auto text-primary"
               title={
                 expandedRows.size === data.length
                   ? "Collapse all"
@@ -561,7 +575,9 @@ const AllUser: React.FC = () => {
       <div className="mt-4 grid grid-cols-1 md:grid-cols-4 gap-4">
         {/* Status Filter */}
         <div className="flex flex-col space-y-2">
-          <label className="text-sm font-medium text-secondary-text">Status</label>
+          <label className="text-sm font-medium text-secondary-text">
+            Status
+          </label>
           <select
             className="text-secondary-text bg-secondary-color px-3 py-2 border border-border rounded-lg shadow-sm focus:outline-none"
             value={statusFilter}
@@ -736,7 +752,7 @@ const AllUser: React.FC = () => {
                         <th
                           key={header.id}
                           className="px-6 py-4 text-left text-xs font-semibold text-header-color uppercase tracking-wider border-b border-border"
-                            style={{ width: header.getSize() }}
+                          style={{ width: header.getSize() }}
                         >
                           <Droppable id={header.column.id}>
                             {isFirst || isLast ? (
@@ -804,9 +820,9 @@ const AllUser: React.FC = () => {
                       className={
                         expandedRows.has(row.id) && row.index === 0
                           ? "bg-primary-md"
-                            : row.index % 2 === 0
-                            ? "bg-primary-md"
-                            : "bg-secondary-color-lt"
+                          : row.index % 2 === 0
+                          ? "bg-primary-md"
+                          : "bg-secondary-color-lt"
                       }
                     >
                       {row.getVisibleCells().map((cell) => (

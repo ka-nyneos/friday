@@ -59,21 +59,19 @@ const ApprovedUser: React.FC = () => {
   const [loading, setLoading] = useState(true);
   const [data, setData] = useState<UserType[]>([]);
 
-
-  type TabVisibility={
+  type TabVisibility = {
     // add:boolean,
     // edit:boolean,
-    delete:boolean,
-    // approve:boolean, 
+    delete: boolean;
+    // approve:boolean,
     // reject:boolean,
-    view:boolean,
+    view: boolean;
     // upload:boolean,
-  }
+  };
   const roleName = localStorage.getItem("userRole");
   const [Visibility, setVisibility] = useState<TabVisibility>({
     view: true,
-    delete: true,    
-
+    delete: true,
   });
   useEffect(() => {
     const fetchPermissions = async () => {
@@ -89,7 +87,7 @@ const ApprovedUser: React.FC = () => {
         if (userTabs) {
           setVisibility({
             view: userTabs?.allTab?.canView || false,
-            delete: userTabs?.allTab?.showDeletebutton || false,     
+            delete: userTabs?.allTab?.showDeletebutton || false,
           });
         }
       } catch (error) {
@@ -99,7 +97,6 @@ const ApprovedUser: React.FC = () => {
 
     fetchPermissions();
   }, []);
-  
 
   useEffect(() => {
     axios
@@ -172,21 +169,21 @@ const ApprovedUser: React.FC = () => {
         accessorKey: "srNo",
         header: "Sr No",
         cell: ({ row }) => (
-          <span className="text-gray-700">{row.index + 1}</span>
+          <span className="text-secondary-text">{row.index + 1}</span>
         ),
       },
       {
         accessorKey: "authenticationType",
         header: "Auth Type",
         cell: (info) => (
-          <span className="text-gray-700">{info.getValue() as string}</span>
+          <span className="text-secondary-text">{info.getValue() as string}</span>
         ),
       },
       {
         accessorKey: "employeeName",
         header: "Employee Name",
         cell: (info) => (
-          <span className="font-medium text-gray-900">
+          <span className="font-medium text-secondary-text-dark">
             {info.getValue() as string}
           </span>
         ),
@@ -195,21 +192,21 @@ const ApprovedUser: React.FC = () => {
         accessorKey: "username",
         header: "Username",
         cell: (info) => (
-          <span className="text-gray-700">{info.getValue() as string}</span>
+          <span className="text-secondary-text">{info.getValue() as string}</span>
         ),
       },
       {
         accessorKey: "email",
         header: "Email",
         cell: (info) => (
-          <span className="text-gray-700">{info.getValue() as string}</span>
+          <span className="text-secondary-text">{info.getValue() as string}</span>
         ),
       },
       {
         accessorKey: "mobile",
         header: "Mobile",
         cell: (info) => (
-          <span className="text-gray-700">{info.getValue() as string}</span>
+          <span className="text-secondary-text">{info.getValue() as string}</span>
         ),
       },
       // {
@@ -225,14 +222,14 @@ const ApprovedUser: React.FC = () => {
         accessorKey: "address",
         header: "Address",
         cell: (info) => (
-          <span className="text-gray-700">{info.getValue() as string}</span>
+          <span className="text-secondary-text">{info.getValue() as string}</span>
         ),
       },
       {
         accessorKey: "businessUnitName",
         header: "Business Unit",
         cell: (info) => (
-          <span className="text-gray-700">{info.getValue() as string}</span>
+          <span className="text-secondary-text">{info.getValue() as string}</span>
         ),
       },
       // {
@@ -253,7 +250,7 @@ const ApprovedUser: React.FC = () => {
         accessorKey: "createdBy",
         header: "Created By",
         cell: (info) => (
-          <span className="text-gray-700">{info.getValue() as string}</span>
+          <span className="text-secondary-text">{info.getValue() as string}</span>
         ),
       },
       {
@@ -263,7 +260,7 @@ const ApprovedUser: React.FC = () => {
           const dateStr = info.getValue() as string;
           const date = new Date(dateStr);
           return (
-            <span className="text-gray-700">
+            <span className="text-secondary-text">
               {isNaN(date.getTime()) ? dateStr : date.toLocaleDateString()}
             </span>
           );
@@ -284,16 +281,26 @@ const ApprovedUser: React.FC = () => {
         cell: (info) => {
           const status = info.getValue() as string;
           const statusColors: Record<string, string> = {
-  Approved: "bg-green-100 text-green-800",
-  pending: "bg-yellow-100 text-yellow-800",
-  "Delete-approval": "bg-yellow-100 text-yellow-800",
-  "delete-approval": "bg-yellow-100 text-yellow-800",
-  rejected: "bg-red-100 text-red-800",
-  approved : "bg-green-100 text-green-800",
-  Rejected: "bg-red-100 text-red-800",
-  "Awaiting-approval": "bg-yellow-100 text-yellow-800", // ✅ Fix: quotes added
-  Inactive: "bg-gray-200 text-gray-700",
-};
+            Approved: "bg-green-100 text-green-800",
+            pending: "bg-yellow-100 text-yellow-800",
+            "Delete-approval": "bg-yellow-100 text-yellow-800",
+            "delete-approval": "bg-yellow-100 text-yellow-800",
+            rejected: "bg-red-100 text-red-800",
+            approved: "bg-green-100 text-green-800",
+            Rejected: "bg-red-100 text-red-800",
+            "Awaiting-approval": "bg-yellow-100 text-yellow-800", // ✅ Fix: quotes added
+            Inactive: "bg-gray-200 text-gray-700",
+          };
+          const toPascalCase = (str: string) => {
+            return str.replace(
+              /(\w)(\w*)/g,
+              (_, firstChar, rest) =>
+                firstChar.toUpperCase() + rest.toLowerCase()
+            );
+          };
+
+          const displayStatus = toPascalCase(status);
+
           return (
             <span
               className={`px-2 py-1 text-xs font-medium rounded-full ${
@@ -301,7 +308,7 @@ const ApprovedUser: React.FC = () => {
                 "bg-gray-100 text-gray-800"
               }`}
             >
-              {status}
+              {displayStatus}
             </span>
           );
         },
@@ -312,16 +319,16 @@ const ApprovedUser: React.FC = () => {
         cell: ({ row }) => (
           <div className="flex items-center space-x-1">
             <button
-  className="p-1.5 hover:bg-gray-100 rounded transition-colors"
-  onClick={() =>
-    exportToExcel(
-      [row.original], // wrap in array for xlsx
-      `Role_${row.original.username || row.original.id}`
-    )
-  }
->
-  <Download className="w-4 h-4 text-[#129990]" />
-</button>
+              className="p-1.5 hover:bg-primary-xl rounded transition-colors"
+              onClick={() =>
+                exportToExcel(
+                  [row.original], // wrap in array for xlsx
+                  `Role_${row.original.username || row.original.id}`
+                )
+              }
+            >
+              <Download className="w-4 h-4 text-primary" />
+            </button>
 
             {/* <button className="p-1.5 hover:bg-gray-100 rounded transition-colors">
               <Trash2 className="w-4 h-4 text-red-600" />
@@ -335,7 +342,7 @@ const ApprovedUser: React.FC = () => {
           <div className="flex items-center justify-center">
             <button
               type="button"
-              className="flex items-center justify-center mx-auto text-[#129990]"
+              className="flex items-center justify-center mx-auto text-primary"
               title={
                 expandedRows.size === data.length
                   ? "Collapse all"
@@ -365,15 +372,15 @@ const ApprovedUser: React.FC = () => {
         cell: ({ row }) => (
           <button
             onClick={() => toggleRowExpansion(row.id)}
-            className="p-2 hover:bg-gray-100 rounded-md transition-colors"
+            className="p-2 hover:bg-primary-xl rounded transition-colors"
             aria-label={
               expandedRows.has(row.id) ? "Collapse row" : "Expand row"
             }
           >
             {expandedRows.has(row.id) ? (
-              <ChevronUp className="w-4 h-4 text-gray-600" />
+              <ChevronUp className="w-4 h-4 text-secondary-text" />
             ) : (
-              <ChevronDown className="w-4 h-4 text-gray-600" />
+              <ChevronDown className="w-4 h-4 text-secondary-text" />
             )}
           </button>
         ),
@@ -385,12 +392,16 @@ const ApprovedUser: React.FC = () => {
         id: "select",
         header: () => (
           <div className="flex items-center justify-center">
-            <input type="checkbox" />
+            <input 
+            className="accent-primary w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2"
+            type="checkbox" />
           </div>
         ),
         cell: () => (
           <div className="flex items-center justify-center">
-            <input type="checkbox" />
+            <input 
+            className="accent-primary w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2"
+            type="checkbox" />
           </div>
         ),
       });
@@ -433,7 +444,7 @@ const ApprovedUser: React.FC = () => {
       columnVisibility,
     },
   });
-  if(loading) return <LoadingSpinner />;
+  if (loading) return <LoadingSpinner />;
 
   return (
     <>
@@ -445,43 +456,52 @@ const ApprovedUser: React.FC = () => {
             className="w-full px-3 py-2 border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
           /> */}
           <div></div>
-            <div></div>
+          <div></div>
           <div></div>
           <div className="mt-10 flex items-center justify-end gap-4">
             <button
-    type="button"
-    className="flex items-center justify-center border border-[#129990] rounded-lg px-2 h-10 text-sm hover:bg-[#e6f7f5] transition"
-    title="Download All Roles"
-    onClick={() => exportToExcel(filteredData, "All_Roles")}
-  >
-    <Upload className="flex item-center justify-center text-[#129990]" />
-  </button>
-              <button
-                type="button"
-                className="flex items-center justify-center border border-[#129990] rounded-lg w-10 h-10 hover:bg-[#e6f7f5] transition"
-                title="Refresh"
-                onClick={() => window.location.reload()}
+              type="button"
+              className="flex items-center justify-center border border-border rounded-lg px-2 h-10 text-sm transition"
+              title="Download All Roles"
+              onClick={() => exportToExcel(filteredData, "All_Roles")}
+            >
+              <Download className="flex item-center justify-center text-primary" />
+            </button>
+            <button
+              type="button"
+              className="flex items-center justify-center text-primary border border-border rounded-lg w-10 h-10 transition"
+              title="Refresh"
+              onClick={() => window.location.reload()}
+            >
+              <svg
+                width="20"
+                className="accent-primary"
+                height="20"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                viewBox="0 0 24 24"
               >
-                <svg width="20" height="20" fill="none" stroke="#129990" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" viewBox="0 0 24 24">
-                  <path d="M23 4v6h-6" />
-                  <path d="M1 20v-6h6" />
-                  <path d="M3.51 9a9 9 0 0 1 14.13-3.36L23 10M1 14l5.36 5.36A9 9 0 0 0 20.49 15" />
-                </svg>
-              </button>
-              <form
+                <path d="M23 4v6h-6" />
+                <path d="M1 20v-6h6" />
+                <path d="M3.51 9a9 9 0 0 1 14.13-3.36L23 10M1 14l5.36 5.36A9 9 0 0 0 20.49 15" />
+              </svg>
+            </button>
+            <form
               className="relative flex items-center"
               onSubmit={(e) => e.preventDefault()}
             >
               <input
                 type="text"
-                placeholder="Search"
-                className="pl-4 pr-10 py-2 border border-[#129990] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#129990]/30 min-w-full"
-                value={searchTerm}
+                placeholder="Search..."
+                className="w-full text-secondary-text bg-secondary-color px-3 py-2 border border-border rounded-lg shadow-sm focus:outline-none"
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
               <button
                 type="submit"
-                className="absolute right-2 top-1/2 -translate-y-1/2 text-[#129990]"
+                className="absolute right-2 top-1/2 -translate-y-1/2 text-primary"
                 tabIndex={-1}
                 aria-label="Search"
               >
@@ -489,11 +509,12 @@ const ApprovedUser: React.FC = () => {
                   width="18"
                   height="18"
                   fill="none"
-                  stroke="#129990"
+                  stroke="currentColor"
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   viewBox="0 0 24 24"
+                  className="w-4 h-4 accent-primary"
                 >
                   <circle cx="11" cy="11" r="8" />
                   <line x1="21" y1="21" x2="16.65" y2="16.65" />
@@ -504,8 +525,8 @@ const ApprovedUser: React.FC = () => {
         </div>
 
         <div className="w-full overflow-x-auto">
-          <div className="bg-white rounded-xl shadow-lg border border-gray-200">
-            <table className="min-w-full divide-y divide-gray-200">
+          <div className=" shadow-lg border border-border">
+            <table className="min-w-full">
               <DndContext
                 onDragEnd={(event: DragEndEvent) => {
                   const { active, over } = event;
@@ -524,7 +545,7 @@ const ApprovedUser: React.FC = () => {
                     <col key={col.id} className="font-medium min-w-[150px]" />
                   ))}
                 </colgroup>
-                <thead className="bg-gray-50 rounded-xl">
+                <thead className="bg-secondary-color rounded-xl">
                   {table.getHeaderGroups().map((headerGroup) => (
                     <tr key={headerGroup.id}>
                       {headerGroup.headers.map((header, index) => {
@@ -534,8 +555,8 @@ const ApprovedUser: React.FC = () => {
                         return (
                           <th
                             key={header.id}
-                            className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider border-b border-gray-200"
-                            style={{ width: header.getSize() }}
+                          className="px-6 py-4 text-left text-xs font-semibold text-header-color uppercase tracking-wider border-b border-border"
+                          style={{ width: header.getSize() }}
                           >
                             <Droppable id={header.column.id}>
                               {isFirst || isLast ? (
@@ -547,8 +568,8 @@ const ApprovedUser: React.FC = () => {
                                 </div>
                               ) : (
                                 <Draggable id={header.column.id}>
-                                  <div className="cursor-move hover:bg-blue-100 rounded px-1 py-1 transition duration-150 ease-in-out">
-                                    {flexRender(
+                                  <div className="cursor-move rounded py-1 transition duration-150 ease-in-out">
+                                                                    {flexRender(
                                       header.column.columnDef.header,
                                       header.getContext()
                                     )}
@@ -564,7 +585,7 @@ const ApprovedUser: React.FC = () => {
                 </thead>
               </DndContext>
 
-              <tbody className="bg-white divide-y divide-gray-100">
+              <tbody className=" divide-y ">
                 {table.getRowModel().rows.length === 0 ? (
                   <tr>
                     <td
@@ -590,7 +611,7 @@ const ApprovedUser: React.FC = () => {
                         <p className="text-lg font-medium text-gray-900 mb-1">
                           No users found
                         </p>
-                        <p className="text-sm text-gray-500">
+                        <p className="text-sm text-primary">
                           There are no users to display at the moment.
                         </p>
                       </div>
@@ -602,16 +623,16 @@ const ApprovedUser: React.FC = () => {
                       <tr
                         className={
                           expandedRows.has(row.id) && row.index === 0
-                            ? "bg-[#d2f5f0]/50"
-                            : row.index % 2 === 0
-                            ? "bg-[#d2f5f0]/50"
-                            : "bg-white"
+                            ? "bg-primary-md"
+                          : row.index % 2 === 0
+                          ? "bg-primary-md"
+                          : "bg-secondary-color-lt"
                         }
                       >
                         {row.getVisibleCells().map((cell) => (
                           <td
                             key={cell.id}
-                            className="px-6 py-4 whitespace-nowrap text-sm border-b border-gray-100"
+                            className="px-6 py-4 whitespace-nowrap text-sm border-b border-border"
                           >
                             {flexRender(
                               cell.column.columnDef.cell,
@@ -633,7 +654,7 @@ const ApprovedUser: React.FC = () => {
                           visibleColumnCount={
                             table.getVisibleLeafColumns().length
                           }
-                          editableKeys={["address", "mobile"]} 
+                          editableKeys={["address", "mobile"]}
                           detailsFields={[
                             "id",
                             "authenticationType",
