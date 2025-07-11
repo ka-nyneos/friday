@@ -111,8 +111,8 @@ const RoleCreation: React.FC = () => {
       onButtonClick={PageChange}
     >
       <div className="flex justify-center">
-        <div className="p-6 rounded-xl border border-gray-300 bg-white shadow-md space-y-6 flex-shrink-0 w-full max-w-[1500px]">
-          <h2 className="text-xl font-semibold">Create User Form</h2>
+        <div className="p-6 rounded-xl border text-secondary-text border-border bg-secondary-color-lt shadow-md space-y-6 flex-shrink-0 w-full max-w-[1500px]">
+          <h2 className="text-xl font-semibold text-secondary-text">Create User Form</h2>
           <form onSubmit={onSubmit}>
             <div className="mb-3">
               <label className="block font-semibold mb-1">Role Name<span className="text-red-500">*</span></label>
@@ -121,7 +121,7 @@ const RoleCreation: React.FC = () => {
                 name="name"
                 value={form.name}
                 onChange={handleChange}
-                className="w-full border rounded p-2"
+                className="w-full text-secondary-text bg-secondary-color-lt px-3 py-2 border border-border rounded-lg shadow-sm focus:outline-none"
                 required
               />
             </div>
@@ -132,7 +132,7 @@ const RoleCreation: React.FC = () => {
                 name="description"
                 value={form.description}
                 onChange={handleChange}
-                className="w-full border rounded p-2"
+                className="w-full text-secondary-text bg-secondary-color-lt px-3 py-2 border border-border rounded-lg shadow-sm focus:outline-none"
                 required
               />
             </div>
@@ -146,8 +146,8 @@ const RoleCreation: React.FC = () => {
                   type="time"
                   name="startTime"
                   value={form.startTime}
-                    onChange={handleChange}
-                  className="w-full border rounded p-2"
+                  onChange={handleChange}
+                  className="w-full text-secondary-text bg-secondary-color-lt px-3 py-2 border border-border rounded-lg shadow-sm focus:outline-none"
                   required
                 />
               </div>
@@ -160,7 +160,7 @@ const RoleCreation: React.FC = () => {
                   name="endTime"
                   value={form.endTime}
                     onChange={handleChange}
-                  className="w-full border rounded p-2"
+                  className="w-full text-secondary-text bg-secondary-color-lt px-3 py-2 border border-border rounded-lg shadow-sm focus:outline-none"
                   required
                 />
               </div>

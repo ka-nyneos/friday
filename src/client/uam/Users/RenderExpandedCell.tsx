@@ -184,12 +184,12 @@ const ExpandedRow: React.FC<ExpandedRowProps> = ({
 
     return (
       <div key={key} className="flex flex-col space-y-1">
-        <label className="font-bold text-gray-600">{label}</label>
+        <label className="font-bold text-secondary-text">{label}</label>
         {isEditing && isEditable ? (
           typeof row.original[typedKey] === "boolean" ? (
             <div>
               <select
-                className="border rounded px-2 py-1 text-sm bg-white shadow-sm"
+                className="border rounded px-2 py-1 text-sm bg-secondary-color-lt border-border shadow-sm text-secondary-text"
                 value={(editValues[typedKey] ? "true" : "false") as string}
                 onChange={(e) =>
                   handleChange(typedKey, e.target.value === "true")
@@ -201,13 +201,13 @@ const ExpandedRow: React.FC<ExpandedRowProps> = ({
             </div>
           ) : (
             <input
-              className="border rounded px-2 py-1 text-sm bg-white shadow-sm"
+              className="border rounded px-2 py-1 text-sm bg-secondary-color-lt border-border shadow-sm text-secondary-text"
               value={(value as string) || ""}
               onChange={(e) => handleChange(typedKey, e.target.value)}
             />
           )
         ) : (
-          <span className="font-medium text-gray-800">{value ?? "—"}</span>
+          <span className="font-medium text-primary-lt">{value ?? "—"}</span>
         )}
       </div>
     );
@@ -216,10 +216,10 @@ const ExpandedRow: React.FC<ExpandedRowProps> = ({
 
   return (
     <tr key={`${rowId}-expanded`}>
-      <td colSpan={visibleColumnCount} className="px-6 py-4 bg-[#d2f5f0]/50">
-        <div className="bg-white rounded-lg p-4 shadow-md border border-gray-200">
+      <td colSpan={visibleColumnCount} className="px-6 py-4 bg-primary-md">
+        <div className="bg-secondary-color-lt rounded-lg p-4 shadow-md border border-border">
           <div className="flex justify-between items-center mb-4">
-            <h4 className="text-lg font-semibold text-gray-800">
+            <h4 className="text-lg font-semibold text-secondary-text">
               Additional Information
             </h4>
             <div>
@@ -234,7 +234,7 @@ const ExpandedRow: React.FC<ExpandedRowProps> = ({
           {/* Details Section */}
           {showDetailsSection && visibleDetailsKeys.length > 0 && (
             <div className="mb-6">
-              <h5 className="text-md font-medium text-gray-700 mb-3 border-b border-gray-200 pb-2">
+              <h5 className="text-md font-medium text-primary mb-3 border-b border-primary-md pb-2">
                 Details
               </h5>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -246,7 +246,7 @@ const ExpandedRow: React.FC<ExpandedRowProps> = ({
           {/* Approval Information Section */}
           {showApprovalSection && visibleApprovalKeys.length > 0 && (
             <div>
-              <h5 className="text-md font-medium text-gray-700 mb-3 border-b border-gray-200 pb-2">
+              <h5 className="text-md font-medium text-primary mb-3 border-b border-primary-md pb-2">
                 Approval Information
               </h5>
               <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -257,7 +257,7 @@ const ExpandedRow: React.FC<ExpandedRowProps> = ({
 
           {/* Show message if no fields are hidden */}
           {visibleDetailsKeys.length === 0 && (
-            <div className="text-center text-gray-500 py-4">
+            <div className="text-center text-primary py-4">
               No additional information to display
             </div>
           )}

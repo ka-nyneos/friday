@@ -40,13 +40,13 @@ const Layout: React.FC<LayoutProps> = ({
       <Navbar />
 
       <main
-        className={`pl-[6rem] mt-[1.75rem] transition-all duration-500 pt-[4rem] p-6 bg-gray-100 min-h-screen`}>
+        className={`pl-[6rem] mt-[1.75rem] transition-all duration-500 pt-[4rem] p-6 bg-body min-h-screen`}>
 
         <div className="bg-secondary-color rounded-xl p-6 h-full w-full overflow-y-auto">
 
-          <div className="border-b pb-4 mb-10">
+          <div className="border-b border-border pb-4 mb-10">
             <div className="flex items-center justify-between">
-              <h1 className="text-3xl font-bold text-black">{title}</h1>
+              <h1 className="text-3xl font-bold tracking-wider text-secondary-text ">{title}</h1>
               <div>
                 {showButton && (
                   <Button onClick={onButtonClick}>

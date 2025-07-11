@@ -20,8 +20,8 @@ const PaginationFooter = <T,>({ table }: PaginationFooterProps<T>) => {
   );
 
   return (
-    <div className="px-6 py-4 border-t border-gray-200 flex items-center justify-between">
-      <div className="text-sm text-gray-700">
+    <div className="bg-secondary-color px-6 py-4 border-t border-border flex items-center justify-between">
+      <div className="text-sm text-secondary-text">
         Showing {firstItem} to {lastItem} of {totalRows} results
       </div>
 
@@ -29,7 +29,7 @@ const PaginationFooter = <T,>({ table }: PaginationFooterProps<T>) => {
         <select
           value={pagination.pageSize}
           onChange={(e) => table.setPageSize(Number(e.target.value))}
-          className="px-3 py-1 border border-gray-300 rounded-md text-sm focus:outline-none focus:ring-2 focus:ring-green-500"
+          className="px-3 py-1 mr-6 border border-primary bg-secondary-color text-primary rounded-md text-sm focus:outline-none"
         >
           {[10, 20, 30, 40, 50].map((pageSize) => (
             <option key={pageSize} value={pageSize}>
@@ -42,33 +42,33 @@ const PaginationFooter = <T,>({ table }: PaginationFooterProps<T>) => {
           <button
             onClick={() => table.setPageIndex(0)}
             disabled={!table.getCanPreviousPage()}
-            className="p-1 rounded-md hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="p-1 rounded-md bg-primary-xl text-primary hover:bg-primary-lg disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <ChevronsLeft className="w-4 h-4" />
           </button>
           <button
             onClick={() => table.previousPage()}
             disabled={!table.getCanPreviousPage()}
-            className="p-1 rounded-md hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="p-1 rounded-md bg-primary-xl text-primary hover:bg-primary-lg disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <ChevronLeft className="w-4 h-4" />
           </button>
 
-          <span className="px-3 py-1 text-sm text-gray-700">
+          <span className="px-3 py-1 text-sm text-secondary-text">
             Page {pagination.pageIndex + 1} of {table.getPageCount()}
           </span>
 
           <button
             onClick={() => table.nextPage()}
             disabled={!table.getCanNextPage()}
-            className="p-1 rounded-md hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="p-1 rounded-md bg-primary-xl text-primary hover:bg-primary-lg disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <ChevronRight className="w-4 h-4" />
           </button>
           <button
             onClick={() => table.setPageIndex(table.getPageCount() - 1)}
             disabled={!table.getCanNextPage()}
-            className="p-1 rounded-md hover:bg-gray-100 disabled:opacity-50 disabled:cursor-not-allowed"
+            className="p-1 rounded-md bg-primary-xl text-primary hover:bg-primary-lg disabled:opacity-50 disabled:cursor-not-allowed"
           >
             <ChevronsRight className="w-4 h-4" />
           </button>

@@ -102,7 +102,7 @@ const AwaitingApproval: React.FC = () => {
         console.error("Error fetching roles:", err);
       });
   }, []);
-p
+  
   const handleBulkApprove = () => {
     const selectedRoleIds = table
       .getSelectedRowModel()

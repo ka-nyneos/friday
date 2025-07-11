@@ -12,11 +12,11 @@ const Footer: React.FC = () => {
   }, []);
 
   return (
-    <footer className="w-full border-t font-bold border-gray-200 flex justify-between items-center text-xs text-gray-400 py-4 px-6 bg-white min-h-[50px]">
-      <span>
+    <footer className="w-full border-t font-bold border-border-secondary flex justify-between items-center text-xs text-primary py-4 px-6 bg-body min-h-[50px]">
+      <span className="pl-[4.5rem]">
         <strong>Copyright © 2025–2026 Cashinvoice.</strong> All rights reserved
       </span>
-      <span className="text-gray-400">Version {version}</span>
+      <span className="text-primary">Version {version}</span>
     </footer>
   );
 };
