@@ -209,15 +209,15 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
       )}
 
       <div
-        className={`fixed top-0 left-0 h-screen z-50 bg-[#129990]/70 backdrop-blur-md ${
+        className={`fixed top-0 left-0 h-screen z-50 bg-gradient-to-b from-primary to-primary-lt bg-transparent backdrop-blur-md ${
           collapsed ? "w-20" : "w-80"
         } text-white p-4 shadow-lg flex flex-col transition-all duration-300 overflow-x-visible transform ${
           isOpen ? "translate-x-0" : "-translate-x-full"
         } lg:translate-x-0`}
       >
         <button
-          onClick={toggleCollapse}
-          className="cursor-pointer text-blue mb-8 self-end focus:outline-none hover:bg-white/20 rounded px-2 py-2 transition-colors duration-200"
+          onClick={toggleCollapse}          
+          className="cursor-pointer text-blue mb-8 self-end focus:outline-none hover:bg-primary-bg-hover rounded px-2 py-2 transition-colors duration-200"
         >
           {collapsed ? <Menu size={24} /> : <X size={24} />}
         </button>
@@ -246,7 +246,7 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                   className={`flex items-center rounded-lg px-3 py-3 transition-colors w-full text-left ${
                     isActive
                       ? "bg-primary-bg-hover font-semibold"
-                      : "hover:bg-white/20 "
+                      : "hover:bg-primary-bg-active"
                   }`}
                 >
                   <span className="w-7 flex justify-center">{item.icon}</span>
@@ -298,8 +298,8 @@ const Sidebar: React.FC<SidebarProps> = ({ isOpen, onClose }) => {
                         }}
                         className={`flex items-center rounded-lg px-3 py-2 transition-colors w-full text-left ${
                           location.pathname === subItem.path
-                            ? "bg-white/30  font-semibold"
-                            : "hover:bg-white/20 "
+                            ? "bg-primary-bg-hover  font-semibold"
+                            : "hover:bg-primary-bg-active"
                         }`}
                       >
                         <span className="w-7 flex justify-center">
