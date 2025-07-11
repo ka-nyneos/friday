@@ -49,11 +49,11 @@ const Roles = () => {
         key={tab.id}
         onClick={() => switchTab(tab.id)}
         className={`
-        flex items-center space-x-2 px-6 py-3 text-sm font-medium rounded-t-lg border-b-2 transition-all duration-200
+        flex items-center space-x-2 px-6 py-3 text-sm font-medium rounded-t-lg border-b transition-all duration-200
         ${
           isActiveTab(tab.id)
-            ? "bg-[#129990] text-white border-[#129990] shadow-sm"
-            : "bg-[#CFFFE2]/30 text-gray-600 border-[#CFFFE2]/30 hover:bg-[#CFFFE2]/50 hover:text-[#129990]"
+            ? "bg-primary-lt text-white border-primary shadow-sm"
+            : "bg-body-hover text-secondary-text border-body-hover hover:bg-body-active hover:text-primary"
         }
       `}
       >
@@ -82,7 +82,7 @@ const Roles = () => {
     <>
       <Layout title="User Roles" showButton={true} buttonText="Create Role" onButtonClick={PageChange}>
         <div className="mb-6 pt-4">
-          <div className="flex space-x-1 border-b border-gray-200">
+          <div className="flex space-x-1 border-b-2 border-primary-lg">
             {tabButtons}
           </div>
         </div>
