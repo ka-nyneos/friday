@@ -1,13 +1,11 @@
 "use client";
 
-import { useMemo, useState, useCallback} from "react";
+import axios from "axios";
+import { useCallback, useEffect, useMemo, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Layout from "../../common/Layout";
 import AllRoles from "./AllRoles";
 import AwaitingRoles from "./AwaitingRoles";
-
-
-
 const useTabNavigation = (initialTab: string = "all") => {
   const [activeTab, setActiveTab] = useState(initialTab);
 
@@ -28,20 +26,65 @@ const useTabNavigation = (initialTab: string = "all") => {
     isActiveTab,
   };
 };
-
-const TAB_CONFIG = [
-  {
-    id: "all",
-    label: "All Roles",
-  },
-  {
-    id: "awaiting",
-    label: "Awaiting Approval",
-  }
-];
+type TabVisibility = {
+  allTab?: boolean;
+  uploadTab?: boolean;
+  pendingTab?: boolean;
+};
 
 const Roles = () => {
   const { activeTab, switchTab, isActiveTab } = useTabNavigation("all");
+  const navigate = useNavigate();
+  const roleName = localStorage.getItem("userRole");
+  const [Visibility, setVisibility] = useState<TabVisibility>({
+    // approve: true,
+    allTab: true,
+    uploadTab: true,
+    pendingTab: true,
+    // reject: true,
+    // view: true,
+  });
+
+  const PageChange = () => {
+    navigate("/role/create");
+  };
+  useEffect(() => {
+    const fetchPermissions = async () => {
+      try {
+        const response = await axios.post(
+          "http://localhost:3143/api/permissions/permissionJSON",
+          { roleName }
+        );
+
+        const pages = response.data?.pages;
+        const userTabs = pages?.["roles"];
+        // console.log(userTabs.allTab.hasAccess);
+        if (userTabs) {
+          setVisibility({
+            allTab: userTabs?.allTab?.hasAccess || false,
+            uploadTab: userTabs?.allTab?.hasAccess || false,
+            pendingTab: userTabs?.allTab?.hasAccess || false,
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching permissions:", error);
+      }
+    };
+
+    fetchPermissions();
+  }, []);
+  const TAB_CONFIG = [
+    {
+      id: "all",
+      label: "All Roles",
+      Visbility: Visibility.allTab,
+    },
+    {
+      id: "awaiting",
+      label: "Awaiting Approval",
+      Visbility: Visibility.pendingTab,
+    },
+  ];
 
   const tabButtons = useMemo(() => {
     return TAB_CONFIG.map((tab) => (
@@ -60,7 +103,7 @@ const Roles = () => {
         <span>{tab.label}</span>
       </button>
     ));
-  }, [activeTab, switchTab, isActiveTab]);
+  }, [Visibility, activeTab, switchTab, isActiveTab]);
 
   const currentContent = useMemo(() => {
     switch (activeTab) {
@@ -73,14 +116,14 @@ const Roles = () => {
     }
   }, [activeTab]);
 
-  const navigate = useNavigate();
-  const PageChange = () => {
-    navigate("/role/create");
-  };
-
   return (
     <>
-      <Layout title="User Roles" showButton={true} buttonText="Create Role" onButtonClick={PageChange}>
+      <Layout
+        title="User Roles"
+        showButton={Visibility.uploadTab}
+        buttonText="Create Role"
+        onButtonClick={PageChange}
+      >
         <div className="mb-6 pt-4">
           <div className="flex space-x-1 border-b-2 border-primary-lg">
             {tabButtons}

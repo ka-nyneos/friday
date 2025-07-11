@@ -1,32 +1,24 @@
-import {
-  ChevronDown,
-  ChevronUp,
-  Download,
-  Upload,
-  Calendar,
-} from "lucide-react";
+import { ChevronDown, ChevronUp, Download } from "lucide-react";
 import PaginationFooter from "../../ui/PaginationFooter";
-import { DateRange } from "react-date-range";
 // import LoadingSpinner from '../../ui/LoadingSpinner';
 import "react-date-range/dist/styles.css";
 import "react-date-range/dist/theme/default.css";
 
-import { exportToExcel } from "../../ui/exportToExcel";
-import Button from "../../ui/Button";
-import { useMemo, useState, useEffect } from "react";
-import { Draggable } from "../../common/Draggable";
-import { Droppable } from "../../common/Droppable";
 import { DndContext, type DragEndEvent } from "@dnd-kit/core";
-import React from "react";
 import {
-  useReactTable,
-  getCoreRowModel,
   flexRender,
+  getCoreRowModel,
   getPaginationRowModel,
+  useReactTable,
   type ColumnDef,
 } from "@tanstack/react-table";
-import ExpandedRow from "../../common/RenderExpandedCell";
 import axios from "axios";
+import React, { useEffect, useMemo, useState } from "react";
+import { Draggable } from "../../common/Draggable";
+import { Droppable } from "../../common/Droppable";
+import ExpandedRow from "../../common/RenderExpandedCell";
+import Button from "../../ui/Button";
+import { exportToExcel } from "../../ui/exportToExcel";
 import LoadingSpinner from "../../ui/LoadingSpinner";
 
 const roleFieldLabels: Record<string, string> = {
@@ -63,7 +55,45 @@ const AwaitingApproval: React.FC = () => {
     showApproveButton: false,
     showRejectButton: false,
   });
+  type TabVisibility = {
+    // add:boolean,
+    // edit:boolean,
+    // delete: boolean;
+    approve: boolean;
+    reject: boolean;
+    view: boolean;
+    // upload:boolean,
+  };
+  const roleName = localStorage.getItem("userRole");
+  const [Visibility, setVisibility] = useState<TabVisibility>({
+    approve: true,
+    reject: true,
+    view: true,
+  });
+  useEffect(() => {
+    const fetchPermissions = async () => {
+      try {
+        const response = await axios.post(
+          "http://localhost:3143/api/permissions/permissionJSON",
+          { roleName }
+        );
 
+        const pages = response.data?.pages;
+        const userTabs = pages?.["user-creation"];
+
+        if (userTabs) {
+          setVisibility({
+            view: userTabs?.allTab?.canView || false,
+            delete: userTabs?.allTab?.showDeleteButton || false,
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching permissions:", error);
+      }
+    };
+
+    fetchPermissions();
+  }, []);
   useEffect(() => {
     axios
       .get<BackendResponse>(
@@ -102,7 +132,7 @@ const AwaitingApproval: React.FC = () => {
         console.error("Error fetching roles:", err);
       });
   }, []);
-  
+
   const handleBulkApprove = () => {
     const selectedRoleIds = table
       .getSelectedRowModel()
@@ -232,7 +262,9 @@ const AwaitingApproval: React.FC = () => {
         accessorKey: "id",
         header: "ID",
         cell: (info) => (
-          <span className="text-secondary-text">{info.getValue() as number}</span>
+          <span className="text-secondary-text">
+            {info.getValue() as number}
+          </span>
         ),
       },
       {
@@ -248,14 +280,18 @@ const AwaitingApproval: React.FC = () => {
         accessorKey: "role_code",
         header: "Role Code",
         cell: (info) => (
-          <span className="text-secondary-text">{info.getValue() as string}</span>
+          <span className="text-secondary-text">
+            {info.getValue() as string}
+          </span>
         ),
       },
       {
         accessorKey: "description",
         header: "Description",
         cell: (info) => (
-          <span className="text-secondary-text">{info.getValue() as string}</span>
+          <span className="text-secondary-text">
+            {info.getValue() as string}
+          </span>
         ),
       },
       {
@@ -482,6 +518,7 @@ const AwaitingApproval: React.FC = () => {
     approvedBy: false,
     approveddate: false,
     actions: true,
+    details: Visibility.view,
   };
 
   const [columnVisibility, setColumnVisibility] = useState(defaultVisibility);
@@ -576,8 +613,12 @@ const AwaitingApproval: React.FC = () => {
 
         <div className="flex items-center justify-end">
           <div className="flex items-center gap-2 min-w-[12rem]">
-            <Button onClick={handleBulkApprove}> Approve </Button>
-            <Button onClick={handleBulkReject}>Reject</Button>
+            {Visibility.approve && (
+              <Button onClick={handleBulkApprove}> Approve </Button>
+            )}
+            {Visibility.reject && (
+              <Button onClick={handleBulkReject}>Reject</Button>
+            )}
           </div>
         </div>
 
@@ -688,7 +729,7 @@ const AwaitingApproval: React.FC = () => {
                       <tr
                         className={
                           expandedRows.has(row.id) && row.index === 0
-                           ? "bg-primary-md"
+                            ? "bg-primary-md"
                             : row.index % 2 === 0
                             ? "bg-primary-md"
                             : "bg-secondary-color-lt"

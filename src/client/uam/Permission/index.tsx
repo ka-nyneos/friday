@@ -1,13 +1,11 @@
 "use client";
 
-import { useMemo, useState, useCallback} from "react";
+import { useCallback, useEffect, useMemo, useState } from "react";
 // import { useNavigate } from "react-router-dom";
+import axios from "axios";
 import Layout from "../../common/Layout";
-import AssignPermission from './AssignPermissions';
-import AwaitingPermission from './AwaitingPermission';
-
-
-
+import AssignPermission from "./AssignPermissions";
+import AwaitingPermission from "./AwaitingPermission";
 
 const useTabNavigation = (initialTab: string = "all") => {
   const [activeTab, setActiveTab] = useState(initialTab);
@@ -30,20 +28,53 @@ const useTabNavigation = (initialTab: string = "all") => {
   };
 };
 
-const TAB_CONFIG = [
-  {
-    id: "all",
-    label: "Assign Permissions",
-  },
-  {
-    id: "Awaiting",
-    label: "Awaiting Users",
-  },
-];
-
 const Permission = () => {
   const { activeTab, switchTab, isActiveTab } = useTabNavigation("all");
+  const roleName = localStorage.getItem("userRole");
 
+  const [Visibility, setVisibility] = useState<TabVisibility>({
+    allTab: false,
+    uploadTab: false,
+    pendingTab: false,
+  });
+
+  useEffect(() => {
+    const fetchPermissions = async () => {
+      try {
+        const response = await axios.post(
+          "http://localhost:3143/api/permissions/permissionJSON",
+          { roleName }
+        );
+
+        const pages = response.data?.pages;
+        const userTabs = pages?.["permissions"];
+
+        if (userTabs) {
+          setVisibility({
+            allTab: userTabs?.allTab?.hasAccess || false,
+            uploadTab: userTabs?.uploadTab?.hasAccess || false,
+            pendingTab: userTabs?.pendingTab?.hasAccess || false,
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching permissions:", error);
+      }
+    };
+
+    fetchPermissions();
+  }, []);
+  const TAB_CONFIG = [
+    {
+      id: "all",
+      label: "Assign Permissions",
+      visibility: Visibility.allTab,
+    },
+    {
+      id: "Awaiting",
+      label: "Awaiting Users",
+      visibility: Visibility.allTab,
+    },
+  ];
   const tabButtons = useMemo(() => {
     return TAB_CONFIG.map((tab) => (
       <button
@@ -61,7 +92,7 @@ const Permission = () => {
         <span>{tab.label}</span>
       </button>
     ));
-  }, [activeTab, switchTab, isActiveTab]);
+  }, [Visibility, activeTab, switchTab, isActiveTab]);
 
   const currentContent = useMemo(() => {
     switch (activeTab) {
@@ -73,8 +104,6 @@ const Permission = () => {
         return <AssignPermission />;
     }
   }, [activeTab]);
-
-  
 
   return (
     <>

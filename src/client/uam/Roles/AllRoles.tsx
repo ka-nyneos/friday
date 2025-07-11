@@ -1,34 +1,29 @@
+import { DndContext, type DragEndEvent } from "@dnd-kit/core";
 import {
-  Filter,
-  RotateCcw,
+  flexRender,
+  getCoreRowModel,
+  getPaginationRowModel,
+  useReactTable,
+  type ColumnDef,
+} from "@tanstack/react-table";
+import axios from "axios";
+import {
+  Calendar,
   ChevronDown,
   ChevronUp,
   Download,
-  Upload,
   Trash2,
-  Calendar,
 } from "lucide-react";
-import PaginationFooter from "../../ui/PaginationFooter";
-import { exportToExcel } from "../../ui/exportToExcel";
-import Button from "../../ui/Button";
-import { useMemo, useState, useEffect } from "react";
-import { Draggable } from "../../common/Draggable";
-import { Droppable } from "../../common/Droppable";
-import { DndContext, type DragEndEvent } from "@dnd-kit/core";
-import React from "react";
-import LoadingSpinner from "../../ui/LoadingSpinner";
-import {
-  useReactTable,
-  getCoreRowModel,
-  flexRender,
-  getPaginationRowModel,
-  type ColumnDef,
-} from "@tanstack/react-table";
-import ExpandedRow from "../../common/RenderExpandedCellRole";
-import axios from "axios";
+import React, { useEffect, useMemo, useState } from "react";
 import { DateRange } from "react-date-range";
 import "react-date-range/dist/styles.css"; // main style file
 import "react-date-range/dist/theme/default.css"; // theme css file
+import { Draggable } from "../../common/Draggable";
+import { Droppable } from "../../common/Droppable";
+import ExpandedRow from "../../common/RenderExpandedCellRole";
+import LoadingSpinner from "../../ui/LoadingSpinner";
+import PaginationFooter from "../../ui/PaginationFooter";
+import { exportToExcel } from "../../ui/exportToExcel";
 
 const roleFieldLabels: Record<string, string> = {
   id: "Role ID",
@@ -74,6 +69,44 @@ const AllRoles: React.FC = () => {
       key: "selection",
     },
   ]);
+  type TabVisibility = {
+    // add:boolean,
+    // edit:boolean,
+    delete: boolean;
+    // approve:boolean,
+    // reject:boolean,
+    view: boolean;
+    // upload:boolean,
+  };
+  const roleName = localStorage.getItem("userRole");
+  const [Visibility, setVisibility] = useState<TabVisibility>({
+    view: true,
+    delete: true,
+  });
+  useEffect(() => {
+    const fetchPermissions = async () => {
+      try {
+        const response = await axios.post(
+          "http://localhost:3143/api/permissions/permissionJSON",
+          { roleName }
+        );
+
+        const pages = response.data?.pages;
+        const userTabs = pages?.["roles"];
+
+        if (userTabs) {
+          setVisibility({
+            view: userTabs?.allTab?.canView || false,
+            delete: userTabs?.allTab?.showDeleteButton || false,
+          });
+        }
+      } catch (error) {
+        console.error("Error fetching permissions:", error);
+      }
+    };
+
+    fetchPermissions();
+  }, []);
 
   function handleDelete(roleId: number) {
     if (!window.confirm("Are you sure you want to delete this role?")) return;
@@ -353,12 +386,14 @@ const AllRoles: React.FC = () => {
             <button className="p-1.5 hover:bg-primary-xl rounded transition-colors">
               <Download className="w-4 h-4 text-primary" />
             </button>
-            <button
-              className="p-1.5 hover:bg-primary-xl rounded transition-colors"
-              onClick={() => handleDelete(row.original.id)}
-            >
-              <Trash2 className="w-4 h-4 text-red-color" />
-            </button>
+            {Visibility.delete && (
+              <button
+                className="p-1.5 hover:bg-primary-xl rounded transition-colors"
+                onClick={() => handleDelete(row.original.id)}
+              >
+                <Trash2 className="w-4 h-4 text-red-color" />
+              </button>
+            )}
           </div>
         ),
       },
