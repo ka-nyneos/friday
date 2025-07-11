@@ -27,7 +27,7 @@ import {
 } from "@tanstack/react-table";
 import ExpandedRow from "../../common/RenderExpandedCell";
 import axios from "axios";
-import LoadingSpinner from '../../ui/LoadingSpinner';
+import LoadingSpinner from "../../ui/LoadingSpinner";
 
 const roleFieldLabels: Record<string, string> = {
   id: "Role ID",
@@ -39,8 +39,8 @@ const roleFieldLabels: Record<string, string> = {
   createdAt: "Created At",
   status: "Status",
   createdBy: "Created By",
-  approvedBy: "Approved By",
-  approveddate: "Approved Date",
+  // approvedBy: "Approved By",
+  // approveddate: "Approved Date",
 };
 
 const AwaitingApproval: React.FC = () => {
@@ -50,7 +50,7 @@ const AwaitingApproval: React.FC = () => {
   const [editStates, setEditStates] = useState<
     Record<string, Partial<UserType>>
   >({});
-  const [loading,setLoading] = useState(true);
+  const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
 
   const [editingRows, setEditingRows] = useState<Set<string>>(new Set());
@@ -94,52 +94,45 @@ const AwaitingApproval: React.FC = () => {
         });
 
         setData(roleData);
-                  setLoading(false);
-
+        setLoading(false);
       })
       .catch((err) => {
-                  setLoading(false);
+        setLoading(false);
 
         console.error("Error fetching roles:", err);
       });
   }, []);
-
+p
   const handleBulkApprove = () => {
-  const selectedRoleIds = table
-    .getSelectedRowModel()
-    .rows.map((row) => row.original.id);
-  if (selectedRoleIds.length === 0) return alert("No roles selected");
+    const selectedRoleIds = table
+      .getSelectedRowModel()
+      .rows.map((row) => row.original.id);
+    if (selectedRoleIds.length === 0) return alert("No roles selected");
 
-  axios
-    .post("http://localhost:3143/roles/bulk-approve", {
-      roleIds: selectedRoleIds,
-      approved_by: localStorage.getItem("userEmail"),
-      approval_comment: "Bulk approved",
-    })
-    .then((response) => {
-      alert("Roles processed successfully");
-
-      const approvedIds =
-        response.data.approved?.map((r: { id: number }) => r.id) || [];
-      const deletedIds =
-        response.data.deleted?.map((r: { id: number }) => r.id) || [];
-
-      setData((prev) =>
-        prev
-          .filter((role) => !deletedIds.includes(role.id)) // remove deleted
-          .map((role) =>
-            approvedIds.includes(role.id)
+    axios
+      .post("http://localhost:3143/roles/bulk-approve", {
+        roleIds: selectedRoleIds,
+        approved_by: localStorage.getItem("userEmail"), // or username/email depending on your system
+        approval_comment: "Bulk approved",
+      })
+      .then((response) => {
+        alert("Roles approved successfully");
+        const updatedIds = response.data.updated.map(
+          (r: { id: number }) => r.id
+        );
+        setData((prev) =>
+          prev.map((role) =>
+            updatedIds.includes(role.id)
               ? { ...role, status: "approved" }
               : role
           )
-      );
-    })
-    .catch((error) => {
-      console.error("Bulk approve error:", error);
-      alert("Failed to approve selected roles.");
-    });
-};
-
+        );
+      })
+      .catch((error) => {
+        console.error("Bulk approve error:", error);
+        alert("Failed to approve selected roles.");
+      });
+  };
 
   const handleBulkReject = () => {
     const selectedRoleIds = table
@@ -232,21 +225,21 @@ const AwaitingApproval: React.FC = () => {
         accessorKey: "srNo",
         header: "Sr No",
         cell: ({ row }) => (
-          <span className="text-gray-700">{row.index + 1}</span>
+          <span className="text-secondary-text">{row.index + 1}</span>
         ),
       },
       {
         accessorKey: "id",
         header: "ID",
         cell: (info) => (
-          <span className="text-gray-700">{info.getValue() as number}</span>
+          <span className="text-secondary-text">{info.getValue() as number}</span>
         ),
       },
       {
         accessorKey: "name",
         header: "Role Name",
         cell: (info) => (
-          <span className="font-medium text-gray-900">
+          <span className="font-medium text-secondary-text-dark">
             {info.getValue() as string}
           </span>
         ),
@@ -255,21 +248,21 @@ const AwaitingApproval: React.FC = () => {
         accessorKey: "role_code",
         header: "Role Code",
         cell: (info) => (
-          <span className="text-gray-700">{info.getValue() as string}</span>
+          <span className="text-secondary-text">{info.getValue() as string}</span>
         ),
       },
       {
         accessorKey: "description",
         header: "Description",
         cell: (info) => (
-          <span className="text-gray-700">{info.getValue() as string}</span>
+          <span className="text-secondary-text">{info.getValue() as string}</span>
         ),
       },
       {
         accessorKey: "startTime",
         header: "Start Time",
         cell: (info) => (
-          <span className="text-gray-700">
+          <span className="text-secondary-text">
             {(info.getValue() as string) ?? "N/A"}
           </span>
         ),
@@ -278,7 +271,7 @@ const AwaitingApproval: React.FC = () => {
         accessorKey: "endTime",
         header: "End Time",
         cell: (info) => (
-          <span className="text-gray-700">
+          <span className="text-secondary-text">
             {(info.getValue() as string) ?? "N/A"}
           </span>
         ),
@@ -290,7 +283,7 @@ const AwaitingApproval: React.FC = () => {
           const value = info.getValue() as string;
           const date = new Date(value);
           return (
-            <span className="text-gray-700">
+            <span className="text-secondary-text">
               {isNaN(date.getTime()) ? value : date.toLocaleDateString()}
             </span>
           );
@@ -302,18 +295,27 @@ const AwaitingApproval: React.FC = () => {
         cell: (info) => {
           const status = info.getValue() as string;
           const statusColors: Record<string, string> = {
-  Approved: "bg-green-100 text-green-800",
-  pending: "bg-yellow-100 text-yellow-800",
-  "Delete-Approval": "bg-yellow-100 text-yellow-800",
-  "Awaiting-Approval": "bg-yellow-100 text-yellow-800",
-  "Delete-approval": "bg-yellow-100 text-yellow-800",
-  "delete-approval": "bg-yellow-100 text-yellow-800",
-  rejected: "bg-red-100 text-red-800",
-  approved : "bg-green-100 text-green-800",
-  Rejected: "bg-red-100 text-red-800",
-  "Awaiting-approval": "bg-yellow-100 text-yellow-800", // ✅ Fix: quotes added
-  Inactive: "bg-gray-200 text-gray-700",
-};
+            Approved: "bg-green-100 text-green-800",
+            pending: "bg-yellow-100 text-yellow-800",
+            "Delete-Approval": "bg-yellow-100 text-yellow-800",
+            "Awaiting-Approval": "bg-yellow-100 text-yellow-800",
+            "Delete-approval": "bg-yellow-100 text-yellow-800",
+            "delete-approval": "bg-yellow-100 text-yellow-800",
+            rejected: "bg-red-100 text-red-800",
+            approved: "bg-green-100 text-green-800",
+            Rejected: "bg-red-100 text-red-800",
+            "Awaiting-approval": "bg-yellow-100 text-yellow-800", // ✅ Fix: quotes added
+            Inactive: "bg-gray-200 text-gray-700",
+          };
+          const toPascalCase = (str: string) => {
+            return str.replace(
+              /(\w)(\w*)/g,
+              (_, firstChar, rest) =>
+                firstChar.toUpperCase() + rest.toLowerCase()
+            );
+          };
+          const displayStatus = toPascalCase(status);
+
           return (
             <span
               className={`px-2 py-1 text-xs font-medium rounded-full ${
@@ -321,7 +323,7 @@ const AwaitingApproval: React.FC = () => {
                 "bg-gray-100 text-gray-800"
               }`}
             >
-              {status}
+              {displayStatus}
             </span>
           );
         },
@@ -330,20 +332,20 @@ const AwaitingApproval: React.FC = () => {
         accessorKey: "createdBy",
         header: "Created By",
         cell: (info) => (
-          <span className="text-gray-700">
+          <span className="text-secondary-text">
             {(info.getValue() as string) ?? "—"}
           </span>
         ),
       },
-      {
-        accessorKey: "approvedBy",
-        header: "Approved By",
-        cell: (info) => (
-          <span className="text-gray-700">
-            {(info.getValue() as string) ?? "—"}
-          </span>
-        ),
-      },
+      // {
+      //   accessorKey: "approvedBy",
+      //   header: "Approved By",
+      //   cell: (info) => (
+      //     <span className="text-secondary-text">
+      //       {(info.getValue() as string) ?? "—"}
+      //     </span>
+      //   ),
+      // },
       {
         accessorKey: "approveddate",
         header: "Approved Date",
@@ -367,7 +369,7 @@ const AwaitingApproval: React.FC = () => {
         cell: ({ row }) => (
           <div className="flex items-center space-x-1">
             <button
-              className="p-1.5 hover:bg-gray-100 rounded transition-colors"
+              className="p-1.5 hover:bg-primary-xl rounded transition-colors"
               onClick={() =>
                 exportToExcel(
                   [row.original], // wrap in array for xlsx
@@ -375,7 +377,7 @@ const AwaitingApproval: React.FC = () => {
                 )
               }
             >
-              <Download className="w-4 h-4 text-[#129990]" />
+              <Download className="w-4 h-4 text-primary" />
             </button>
 
             {/* <button className="p-1.5 hover:bg-gray-100 rounded transition-colors">
@@ -391,7 +393,7 @@ const AwaitingApproval: React.FC = () => {
           <div className="flex items-center justify-center">
             <button
               type="button"
-              className="flex items-center justify-center mx-auto text-[#129990]"
+              className="flex items-center justify-center mx-auto text-primary"
               title={
                 expandedRows.size === data.length
                   ? "Collapse all"
@@ -421,15 +423,15 @@ const AwaitingApproval: React.FC = () => {
         cell: ({ row }) => (
           <button
             onClick={() => toggleRowExpansion(row.id)}
-            className="p-2 hover:bg-gray-100 rounded-md transition-colors"
+            className="p-2 hover:bg-primary-xl rounded transition-colors"
             aria-label={
               expandedRows.has(row.id) ? "Collapse row" : "Expand row"
             }
           >
             {expandedRows.has(row.id) ? (
-              <ChevronUp className="w-4 h-4 text-gray-600" />
+              <ChevronUp className="w-4 h-4 text-secondary-text" />
             ) : (
-              <ChevronDown className="w-4 h-4 text-gray-600" />
+              <ChevronDown className="w-4 h-4 text-secondary-text" />
             )}
           </button>
         ),
@@ -445,7 +447,7 @@ const AwaitingApproval: React.FC = () => {
               type="checkbox"
               checked={table.getIsAllPageRowsSelected()}
               onChange={table.getToggleAllPageRowsSelectedHandler()}
-              className="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2"
+              className="accent-primary w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2"
             />
           </div>
         ),
@@ -455,7 +457,7 @@ const AwaitingApproval: React.FC = () => {
               type="checkbox"
               checked={row.getIsSelected()}
               onChange={row.getToggleSelectedHandler()}
-              className="w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2"
+              className="accent-primary w-4 h-4 text-green-600 bg-gray-100 border-gray-300 rounded focus:ring-green-500 focus:ring-2"
             />
           </div>
         ),
@@ -501,22 +503,22 @@ const AwaitingApproval: React.FC = () => {
   return (
     <>
       <div className="space-y-6">
-        <div className="mt-4 grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-4">
           <div></div>
           <div></div>
           <div></div>
           <div className="mt-10 flex items-center justify-end gap-4">
             <button
               type="button"
-              className="flex items-center justify-center border border-[#129990] rounded-lg px-2 h-10 text-sm hover:bg-[#e6f7f5] transition"
+              className="flex items-center justify-center border border-border rounded-lg px-2 h-10 text-sm transition"
               title="Download All Roles"
               onClick={() => exportToExcel(filteredData, "All_Roles")}
             >
-              <Upload className="flex item-center justify-center text-[#129990]" />
+              <Download className="flex item-center justify-center text-primary" />
             </button>
             <button
               type="button"
-              className="flex items-center justify-center border border-[#129990] rounded-lg w-10 h-10 hover:bg-[#e6f7f5] transition"
+              className="flex items-center justify-center border border-border rounded-lg w-10 h-10 transition"
               title="Refresh"
               onClick={() => window.location.reload()}
             >
@@ -524,11 +526,12 @@ const AwaitingApproval: React.FC = () => {
                 width="20"
                 height="20"
                 fill="none"
-                stroke="#129990"
+                stroke="currentColor"
                 strokeWidth="2"
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 viewBox="0 0 24 24"
+                className="text-primary"
               >
                 <path d="M23 4v6h-6" />
                 <path d="M1 20v-6h6" />
@@ -541,8 +544,8 @@ const AwaitingApproval: React.FC = () => {
             >
               <input
                 type="text"
-                placeholder="Search"
-                className="pl-4 pr-10 py-2 border border-[#129990] rounded-lg focus:outline-none focus:ring-2 focus:ring-[#129990]/30 min-w-full"
+                placeholder="Search..."
+                className="w-full text-secondary-text bg-secondary-color px-3 py-2 border border-border rounded-lg shadow-sm focus:outline-none"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
               />
@@ -556,11 +559,12 @@ const AwaitingApproval: React.FC = () => {
                   width="18"
                   height="18"
                   fill="none"
-                  stroke="#129990"
+                  stroke="currentColor"
                   strokeWidth="2"
                   strokeLinecap="round"
                   strokeLinejoin="round"
                   viewBox="0 0 24 24"
+                  className="text-primary"
                 >
                   <circle cx="11" cy="11" r="8" />
                   <line x1="21" y1="21" x2="16.65" y2="16.65" />
@@ -578,8 +582,8 @@ const AwaitingApproval: React.FC = () => {
         </div>
 
         <div className="w-full overflow-x-auto">
-          <div className="bg-white rounded-xl shadow-lg border border-gray-200">
-            <table className="min-w-full divide-y divide-gray-200">
+          <div className="shadow-lg border border-border">
+            <table className="min-w-full">
               <DndContext
                 onDragEnd={(event: DragEndEvent) => {
                   const { active, over } = event;
@@ -606,7 +610,7 @@ const AwaitingApproval: React.FC = () => {
                   ))}
                 </colgroup>
 
-                <thead className="bg-gray-50 rounded-xl">
+                <thead className="bg-secondary-color rounded-xl">
                   {table.getHeaderGroups().map((headerGroup) => (
                     <tr key={headerGroup.id}>
                       {headerGroup.headers.map((header, index) => {
@@ -616,7 +620,7 @@ const AwaitingApproval: React.FC = () => {
                         return (
                           <th
                             key={header.id}
-                            className="px-6 py-4 text-left text-xs font-semibold text-gray-700 uppercase tracking-wider border-b border-gray-200"
+                            className="px-6 py-4 text-left text-xs font-semibold text-header-color uppercase tracking-wider border-b border-border"
                             style={{ width: header.getSize() }}
                           >
                             <Droppable id={header.column.id}>
@@ -629,7 +633,7 @@ const AwaitingApproval: React.FC = () => {
                                 </div>
                               ) : (
                                 <Draggable id={header.column.id}>
-                                  <div className="cursor-move hover:bg-blue-100 rounded px-1 py-1 transition duration-150 ease-in-out">
+                                  <div className="cursor-move rounded py-1 transition duration-150 ease-in-out">
                                     {flexRender(
                                       header.column.columnDef.header,
                                       header.getContext()
@@ -646,7 +650,7 @@ const AwaitingApproval: React.FC = () => {
                 </thead>
               </DndContext>
 
-              <tbody className="bg-white divide-y divide-gray-100">
+              <tbody className="divide-y">
                 {table.getRowModel().rows.length === 0 ? (
                   <tr>
                     <td
@@ -684,16 +688,16 @@ const AwaitingApproval: React.FC = () => {
                       <tr
                         className={
                           expandedRows.has(row.id) && row.index === 0
-                            ? "bg-[#d2f5f0]/50"
+                           ? "bg-primary-md"
                             : row.index % 2 === 0
-                            ? "bg-[#d2f5f0]/50"
-                            : "bg-white"
+                            ? "bg-primary-md"
+                            : "bg-secondary-color-lt"
                         }
                       >
                         {row.getVisibleCells().map((cell) => (
                           <td
                             key={cell.id}
-                            className="px-6 py-4 whitespace-nowrap text-sm border-b border-gray-100"
+                            className="px-6 py-4 whitespace-nowrap text-sm border-b border-border"
                           >
                             {flexRender(
                               cell.column.columnDef.cell,
@@ -722,7 +726,7 @@ const AwaitingApproval: React.FC = () => {
                             "description",
                             "startTime",
                             "endTime",
-                            "status",
+                            // "status",
                           ]}
                           approvalFields={[
                             "createdBy",
